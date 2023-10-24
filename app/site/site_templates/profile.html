@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="d-flex align-items-center justify-content-center mb-5">
+            <div class="card bg-trans mt-5">
+                <div class="card-body">
+                    <h1 class="card-title">Welcome to your meme collection: {{ current_user.username }}</h1>
+                    <p class="card-text">Here is your token to add memes: {{ current_user.token }}</p>
+                    {% if current_user.is_authenticated %}
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <a href="{{ url_for('api.addTemps') }}" class="btn btn-primary">Add a meme template</a>
+                            </div>
+                            <div class="col-lg-6">
+                                <a href="{{ url_for('api.getTemplates') }}" class="btn btn-primary">Show meme templates</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

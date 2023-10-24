@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<section>
+    {% for dict in data %}
+    <img style="height: 200px; "src="http://127.0.0.1:5000/{{ dict['img_src'] }}">
+    {% endfor %}
+</section>
+{% endblock %}
