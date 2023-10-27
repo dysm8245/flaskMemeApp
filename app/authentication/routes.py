@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request, redirect, jsonify
 from forms import UserLoginForm, UserSignupForm
 from models import User, db
 from werkzeug.security import check_password_hash
@@ -8,28 +8,26 @@ auth = Blueprint('auth', __name__, template_folder='auth_templates')
 
 @auth.route('/signup', methods=["GET", "POST"])
 def signup():
-    form = UserSignupForm()
-
     try:
         #making sure form is correct
-        if request.method == 'POST' and form.validate_on_submit():
-            first_name = form.first_name.data
-            last_name = form.last_name.data
-            email = form.email.data
-            username = form.username.data
-            password = form.password.data
+        if request.method == 'POST':
+            email = request.json["email"]
+            username = request.json["username"]
+            token = request.json["token"]
             #creating user to store to database
-            user = User(first_name, last_name, email, username, password)
+            user = User(email, username, token)
             #sending user to database
             db.session.add(user)
             db.session.commit()
             #printing confirmation in terminal
             print('User added to database')
-            return redirect("/signin")
+            return jsonify({
+                "email": email, 
+                "username": username,
+                "token": token
+            })
     except:
-        raise Exception('Invalid form data')
-    
-    return render_template('signup.html', form=form)
+        raise Exception("Couldn't add user to database")
 
 @auth.route('/signin', methods=["GET", "POST"])
 def signin():

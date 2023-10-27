@@ -17,30 +17,19 @@ def load_user(user_id):
 
 class User(db.Model, UserMixin):
     id = db.Column(db.String, primary_key=True)
-    first_name = db.Column(db.String(100), nullable=False)
-    last_name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), nullable=False)
     username = db.Column(db.String(100), nullable=False)
-    password = db.Column(db.String, nullable=False)
     token = db.Column(db.String, nullable=False, unique=True)
 
-    def __init__(self, first_name, last_name, email, username, password):
+    def __init__(self, email, username, token):
         self.id = self.set_id()
-        self.first_name = first_name
-        self.last_name = last_name
         self.email = email
         self.username = username
-        self.password = self.set_pwhash(password)
-        self.token = self.set_token(24)
+        self.token = token
 
     def set_id(self):
         return str(uuid.uuid4())
         
-    def set_pwhash(self, password):
-        return generate_password_hash(password)
-        
-    def set_token(self, length):
-        return secrets.token_hex(length)
     
 class Memes(db.Model):
     id = db.Column(db.String, primary_key=True)
@@ -81,4 +70,3 @@ memes_schema = MemeSchema(many=True)
 
 template_schema = TemplateSchema()
 templates_schema = TemplateSchema(many=True)
-
